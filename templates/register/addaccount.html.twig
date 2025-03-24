@@ -3,8 +3,5 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <turbo-frame id="id_account">
-        {{ form(form) }}
-        {% include "composants/_toast.html.twig" %}
-    </turbo-frame>
+    {{ form(form) }}
 {% endblock %}
