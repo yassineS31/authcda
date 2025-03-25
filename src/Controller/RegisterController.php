@@ -12,13 +12,15 @@ use App\Form\RegisterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Service\UtilsService;
 
 final class RegisterController extends AbstractController
 {
     public function __construct(
         private readonly AccountRepository $accountRepository,
         private readonly EntityManagerInterface $em,
-        private readonly UserPasswordHasherInterface $hasher
+        private readonly UserPasswordHasherInterface $hasher,
+        private readonly UtilsService $utilsService
     ) {}
 
     #[Route('/register', name: 'app_register_addaccount')]
@@ -36,6 +38,7 @@ final class RegisterController extends AbstractController
         if($form->isSubmitted() && $form->isValid()) {
             //Test si le compte n'existe pas
             if(!$this->accountRepository->findOneBy(["email" => $account->getEmail()])) {
+                $account->setStatus(false);
                 $account->setRoles(["ROLE_USER"]);
                 $this->em->persist($account);
                 $this->em->flush();
@@ -53,5 +56,24 @@ final class RegisterController extends AbstractController
         return $this->render('register/addaccount.html.twig', [
             'form' => $form
         ]);
+    }
+
+    #[Route('/activate/{id}', name:'app_register_activate')]
+    public function activate(mixed $id) :Response {
+        try {
+            $id = $this->utilsService->decodeBase64($id);
+            if(is_numeric($id)) {
+                $account = $this->accountRepository->find($id);
+                if(!$account->isStatus()) {
+                    $account->setStatus(true);
+                    $this->em->persist($account);
+                    $this->em->flush();
+                }
+            }
+        } catch (\Exception $e) {
+            $this->addFlash("warning", $e->getMessage());
+        }
+        //Redirection vers la page Accueil
+        return $this->redirectToRoute('app_login');
     }
 }
