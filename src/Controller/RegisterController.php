@@ -39,6 +39,7 @@ final class RegisterController extends AbstractController
             //Test si le compte n'existe pas
             if(!$this->accountRepository->findOneBy(["email" => $account->getEmail()])) {
                 $account->setStatus(false);
+                $account->setPassword($this->hasher->hashPassword($account, $account->getPassword()));
                 $account->setRoles(["ROLE_USER"]);
                 $this->em->persist($account);
                 $this->em->flush();
