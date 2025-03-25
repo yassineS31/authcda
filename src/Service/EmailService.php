@@ -8,12 +8,13 @@ use PHPMailer\PHPMailer\Exception;
 
 final class EmailService
 {
+    private PHPMailer $mailer;
+
     public function __construct(
         private readonly string $emailUser,
         private readonly string $emailPassword,
         private readonly string $emailSmtp,
-        private readonly int $emailPort,
-        private PHPMailer $mailer
+        private readonly int $emailPort
     ){
         $this->mailer = new PHPMailer(true);
     }
@@ -25,6 +26,8 @@ final class EmailService
      * @return void ne retourne rien
      */
     public function sendEmail(string $receiver, string $subject, string $body) :void {
+        /* //Load Composer's autoloader
+        require '../../vendor/autoload.php'; */
         try {
             $this->config();
             $this->mailer->setFrom($this->emailUser, 'Mailer');
