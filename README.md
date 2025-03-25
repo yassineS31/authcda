@@ -2,7 +2,7 @@
 
 **1 Soit vous faites un fork**
 
-**ou Clone** :
+**ou un Clone** :
 
 ```sh
 git clone https://github.com/evaluationWeb/authcda.git
@@ -14,7 +14,7 @@ git clone https://github.com/evaluationWeb/authcda.git
 cd nom_projet
 ```
 
-**3 Créer les variables d'environnement**.env et .env.dev :
+**3 Créer les variables d'environnement** .env et .env.dev :
 
 ```txt
 EMAIL_USER=
