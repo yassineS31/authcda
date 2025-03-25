@@ -14,9 +14,4 @@ class TestController extends AbstractController
         private readonly EmailService $emailService
     ) {}
     
-    #[Route('/test', name:'app_test_testemail')]
-    public function testEmail() : Response{
-        dd($this->getParameter("email_user"));
-        return new Response($this->emailService->test());
-    }
 }
